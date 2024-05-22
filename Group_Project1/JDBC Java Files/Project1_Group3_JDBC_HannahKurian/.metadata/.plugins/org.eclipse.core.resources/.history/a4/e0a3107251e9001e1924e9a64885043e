@@ -1,0 +1,82 @@
+package jdbc;
+
+
+import java.sql.*;
+
+public class Driver {
+	
+    public static void main(String[] args) {
+    	FindEntriesCount();
+    	//findEntriesCount();
+        try {
+            //. get connection to database
+            //String connectionUrl = "jdbc:sqlserver://localhost:13001;databaseName=master;encrypt=true;trustServerCertificate=true;user=sa;password=PH@123456789";
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:1401/TSQLV4", "root", "root");
+            //. create a statement
+            Statement myStmt = myConn.createStatement();
+            //. execute sql query
+            ResultSet myRs = myStmt.executeQuery("select * from Employees");
+            //. process the result set
+            while(myRs.next()) {
+            	System.out.println("Names of employees listed below:");
+                System.out.println(myRs.getString("lastname"));
+            }
+
+        }
+        catch (Exception exc) {
+            exc.printStackTrace();
+        }
+       
+    }
+    private static void FindEntriesCount() {
+        try {
+            // Get connection to database
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:1401/TSQLV4", "root", "root");
+            // Prepare a statement
+            String query = "SELECT COUNT(*) AS Total FROM Locations WHERE country = ?";
+            PreparedStatement pstmt = myConn.prepareStatement(query);
+            // Set the Country parameter to "Mexico"
+            pstmt.setString(1, "Mexico");
+            // Execute the query
+            ResultSet myRs = pstmt.executeQuery();
+            // Process the result set
+            if (myRs.next()) {
+                int count = myRs.getInt("Total");
+                System.out.println("Number of entries from Mexico: " + count);
+            }
+
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+    }
+    
+    private static void findEntriesCount() {
+        try {
+            // Get connection to the database
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:1401/AdventureWorks2017", "root", "root");
+            
+            // Assuming there's a column named 'CountryRegionCode' in the table where you're searching for the address
+            // and you're searching in a table named 'Address', adjust accordingly to your schema
+            String query = "SELECT AddressID FROM Address";
+            
+            PreparedStatement pstmt = myConn.prepareStatement(query);
+            
+            // Set the Country parameter to "Mexico"
+            //pstmt.setString(1, "Mexico");
+            
+            // Execute the query
+            ResultSet myRs = pstmt.executeQuery();
+            
+            // Process the result set
+            while (myRs.next()) {
+                int addressId = myRs.getInt("AddressID");
+                System.out.println("AddressID: " + addressId);
+            }
+
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+    }
+
+
+}
